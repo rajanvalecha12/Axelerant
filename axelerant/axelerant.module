@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * Implements hook_form_FORM_ID_alter
+ */
+function axelerant_form_system_site_information_settings_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+//get system site configuration
+$site_config = Drupal::config('system.site');
+if(null !== $site_config->get('siteapikey')){
+    $value = $site_config->get('siteapikey');
+}else{
+    $value = "No API Key yet";
+}
+$form['site_information']['siteapikey'] = [
+      '#type' => 'textfield',
+      '#title' => t('Site API Key'),
+      '#default_value' => $value,
+      '#required' => FALSE,
+    ];
+$form['actions']['submit']['#submit'][] = 'submit_siteapikey';
+$form['actions']['submit']['#value'] = 'Update configuration';
+}
+
+function submit_siteapikey(&$form, \Drupal\Core\Form\FormStateInterface $form_state){
+    \Drupal::configFactory()->getEditable('system.site')
+      ->set('siteapikey', $form_state->getValue('siteapikey'))
+      ->save();
+    drupal_set_message(t('the Site API Key has been saved with the value " %key " .', array('%key' => $form_state->getValue('siteapikey'))));
+}

@@ -1,0 +1,6 @@
+axelerant.json:
+  path: 'page_json/{type}/{nid}'
+  defaults:
+    _controller: '\Drupal\axelerant\Controller\AxelerantController::display'
+  requirements:
+    _custom_access: '\Drupal\axelerant\Controller\AxelerantController::access'
